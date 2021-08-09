@@ -1,16 +1,29 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <ReposSearchForm @fetchedRepos="populateRepos" />
+  <ReposContainer v-if="repos.length > 0" :repos="this.repos" />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ReposSearchForm from './components/ReposSearchForm.vue'
+import ReposContainer from './components/ReposContainer.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    ReposSearchForm,
+    ReposContainer
+  },
+  data() {
+    return {
+      repos: []
+    }
+  },
+  methods: {
+    populateRepos(event) {
+      console.log(event.data)
+      this.repos = event.data.items
+    }
+  },
 }
 </script>
 
