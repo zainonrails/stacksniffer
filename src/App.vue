@@ -1,4 +1,5 @@
 <template>
+  <Navbar />
   <ReposSearchForm @fetchedRepos="populateRepos" />
   <ReposContainer v-if="repos.length > 0" :repos="this.repos" />
 </template>
@@ -6,12 +7,14 @@
 <script>
 import ReposSearchForm from './components/ReposSearchForm.vue'
 import ReposContainer from './components/ReposContainer.vue'
+import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'App',
   components: {
     ReposSearchForm,
-    ReposContainer
+    ReposContainer,
+    Navbar
   },
   data() {
     return {
@@ -34,6 +37,5 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>

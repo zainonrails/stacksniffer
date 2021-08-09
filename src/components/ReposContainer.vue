@@ -6,9 +6,14 @@
       <div class="col-6 offset-3">
         <div class="card mt-4" v-for="repo in containerRepos" :key="repo.id">
           <div class="card-body">
-            <h5 class="card-title">{{ repo.full_name }}</h5>
-            <i :class="['programming', `lang-${repo.language.toLowerCase()}`]"></i>
+            <h5 class="card-title">{{ repo.full_name }} <i :class="['programming', `lang-${repo.language ? repo.language.toLowerCase(): ''}`]"></i> </h5>
+            
             <p class="card-text"> {{repo.description}} </p>
+            <div class="text-right">
+              {{repo.stargazers_count}}
+              <span class="oi oi-star"></span>
+            </div>
+            
             <a :href="repo.html_url" target="_blank" class="btn btn-primary">Homepage</a>
           </div>
         </div>
