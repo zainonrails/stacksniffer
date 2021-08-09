@@ -1,12 +1,11 @@
 <template>
   <div class="container">
     <div class="row">
-      <div class="col-6">
+      <div class="col-6 offset-3">
         <form class="form">
-          search
-          <input @keyup.enter="fetchRepos" class="form-control" v-model="searchTerm" type="text" />
-          <button @click.prevent="fetchRepos"> Search</button>
-          {{searchTerm}}
+          <label for="search"><strong> Explore open source libraries </strong></label>
+          <input name="search" @keyup.enter="fetchRepos" class="form-control" v-model="searchTerm" type="text" />
+          <button class="btn btn-primary mt-2" @click.prevent="fetchRepos"> Search</button>
         </form>
       </div>
     </div>
