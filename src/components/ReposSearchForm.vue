@@ -13,11 +13,9 @@
 </template>
 
 <script>
-  import RepoService from '../services/RepoService'
 
   export default {
     name: 'ReposSearchForm',
-    emits: ['fetchedRepos'],
     data() {
       return {
         searchTerm: ''
@@ -29,16 +27,15 @@
       }
     },
     methods: {
-      async fetchRepos() {
+      fetchRepos() {
         let params = {
           sort: 'stars',
           order: 'desc',
           per_page: 20,
           q: this.topicString
         }
-        let repos = await RepoService.getRepos(params)
-        this.$emit('fetchedRepos', repos)
-        // console.log(repos.data)
+
+        this.$store.dispatch('fetchRepos', params)
       }
     },
   }

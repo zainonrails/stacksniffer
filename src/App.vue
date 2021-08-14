@@ -1,13 +1,15 @@
 <template>
   <Navbar />
-  <ReposSearchForm @fetchedRepos="populateRepos" />
-  <ReposContainer v-if="repos.length > 0" :repos="this.repos" />
+  <ReposSearchForm />
+  <ReposContainer v-if="repos.length > 0 && this.filteredRepos == 0" :repos="repos" />
+  <ReposContainer v-if="filteredRepos.length > 0" :repos="filteredRepos" />
 </template>
 
 <script>
 import ReposSearchForm from './components/ReposSearchForm.vue'
 import ReposContainer from './components/ReposContainer.vue'
 import Navbar from './components/Navbar.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -16,17 +18,7 @@ export default {
     ReposContainer,
     Navbar
   },
-  data() {
-    return {
-      repos: []
-    }
-  },
-  methods: {
-    populateRepos(event) {
-      console.log(event.data)
-      this.repos = event.data.items
-    }
-  },
+  computed: mapState(['repos', 'filteredRepos'])
 }
 </script>
 

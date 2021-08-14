@@ -1,50 +1,37 @@
 <template>
   <div class="mt-4">
-    <button @click="sortRepos(lang)" :key="lang" v-for="lang in langs" class="btn btn-info">{{lang}}</button>
-    <button @click="resetRepos" class="btn btn-default">Clear</button>
     <div class="row text-left">
       <div class="col-6 offset-3">
-        <div class="card mt-4" v-for="repo in containerRepos" :key="repo.id">
-          <div class="card-body">
-            <h5 class="card-title">{{ repo.full_name }} <i :class="['programming', `lang-${repo.language ? repo.language.toLowerCase(): ''}`]"></i> </h5>
-            
-            <p class="card-text"> {{repo.description}} </p>
-            <div class="text-right">
-              {{repo.stargazers_count}}
-              <span class="oi oi-star"></span>
-            </div>
-            
-            <a :href="repo.html_url" target="_blank" class="btn btn-primary">Homepage</a>
-          </div>
-        </div>
+        <button @click="filterReposByLanguage(lang)" :key="lang" v-for="lang in langs" class="btn btn-info">{{lang}}</button>
+        <button @click="resetRepos" class="btn btn-default">Clear</button>
+        <Repo :key="repo.id" v-for="repo in repos" :repo="repo" />
       </div>
     </div>
-    
-    <!-- <Repo :key="repo.id" v-for="repo in repos" :repo="repo" /> -->
   </div>
 </template>
 
 <script>
-  // import Repo from './Repo.vue'
+  import Repo from './Repo.vue'
 
   export default {
     name: 'ReposContainer',
+    components: {
+      Repo
+    },
     props: ['repos'],
-    data () {
+    data() {
       return {
-        containerRepos: this.repos,
         langs: ['Ruby', 'Python', 'JavaScript', 'PHP', 'Java', 'TypeScript', 'C#', 'Go', 'Clojure', 'Rust', 'C', 'C++']
       }
     },
     methods: {
-      sortRepos(lang) {
-        console.log(lang)
-        this.containerRepos = this.repos.filter(r => r.language === lang)
-        console.log(this.containerRepos)
+      filterReposByLanguage (language) {
+        console.log('dispatching filter action')
+        this.$store.dispatch('filterReposByLanguage', language)
       },
-
-      resetRepos () {
-        this.containerRepos = this.repos
+      resetRepos() {
+        console.log('dispatching clear action')
+        this.$store.dispatch('clearFilters')
       }
     },
   }
