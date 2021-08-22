@@ -5,17 +5,16 @@ import RepoService from './services/RepoService'
 export default createStore({
   state: {
     repos: [],
-    filteredRepos: []
+    repoLanguages: [],
+    activeReadme: ''
   },
   mutations: {
     SET_REPOS(state, repos) {
       state.repos = repos
+      state.repoLanguages = [...new Set(repos.map(r => r.language))]
     },
-    FILTER_REPOS(state, language) {
-      state.filteredRepos = state.repos.filter((repo) => repo.language === language )
-    },
-    CLEAR_FILTERS(state) {
-      state.filteredRepos = []
+    SET_ACTIVE_README(state, readme) {
+      state.activeReadme = readme
     }
   },
   actions: {
@@ -24,18 +23,19 @@ export default createStore({
         commit('SET_REPOS', res.data.items);
       })
     },
-    filterReposByLanguage({ commit }, language) {
-      console.log('inside filter action')
-      commit('FILTER_REPOS', language)
-    },
-    clearFilters({ commit }) {
-      console.log('inside clear action')
-      commit('CLEAR_FILTERS')
+    fetchReadmeContents({ commit }, repoName) {
+      RepoService.getReadme(repoName).then(data => {
+        console.log(data.data)
+        commit('SET_ACTIVE_README', data.data)
+      })
     }
   },
   getters: {
     filterRepos: (state) => (languageToFilter) => {
       return state.repos.filter((repo) => repo.language === languageToFilter );
+    },
+    reposCount: (state) => {
+      return state.repos.length > 0
     }
   }
 })

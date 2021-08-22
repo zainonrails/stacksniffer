@@ -1,37 +1,50 @@
 <template>
-  <div class="mt-4">
+  <div class="mt-4 container-fluid">
     <div class="row text-left">
-      <div class="col-6 offset-3">
+      <div class="col-6">
         <button @click="filterReposByLanguage(lang)" :key="lang" v-for="lang in langs" class="btn btn-info">{{lang}}</button>
-        <button @click="resetRepos" class="btn btn-default">Clear</button>
-        <Repo :key="repo.id" v-for="repo in repos" :repo="repo" />
+        <button v-if="reposCount" @click="resetRepos" class="btn btn-default">Clear</button>
+        <Repo :key="repo.id" v-for="repo in filteredRepos" :repo="repo" @click="fetchReadme(repo.full_name)" />
+      </div>
+      <div class="col-6">
+        <RepoReadme v-if="readme" :readmeContent="readme" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
   import Repo from './Repo.vue'
+  import RepoReadme from './RepoReadme.vue';
 
   export default {
     name: 'ReposContainer',
     components: {
-      Repo
+      Repo,
+      RepoReadme
     },
-    props: ['repos'],
     data() {
       return {
-        langs: ['Ruby', 'Python', 'JavaScript', 'PHP', 'Java', 'TypeScript', 'C#', 'Go', 'Clojure', 'Rust', 'C', 'C++']
+        filteredRepos: []
       }
+    },
+    computed: {
+      ...mapState({ langs: 'repoLanguages', readme: 'activeReadme', repos: 'repos' }),
+      ...mapGetters(['reposCount'])
+    },
+    mounted() {
+      this.filteredRepos = this.repos
     },
     methods: {
       filterReposByLanguage (language) {
-        console.log('dispatching filter action')
-        this.$store.dispatch('filterReposByLanguage', language)
+        this.filteredRepos = this.$store.getters.filterRepos(language)
       },
       resetRepos() {
-        console.log('dispatching clear action')
-        this.$store.dispatch('clearFilters')
+        this.filteredRepos = this.repos
+      },
+      fetchReadme(repoName) {
+        this.$store.dispatch('fetchReadmeContents', repoName)
       }
     },
   }
