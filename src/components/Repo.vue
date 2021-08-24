@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card mt-4" :key="repo.id">
+    <div class="card mt-4 pointer shadow p-3 mb-5 bg-white rounded" :key="repo.id">
       <div class="card-body">
         <h5 class="card-title">{{ repo.full_name }} <i :class="['programming', `lang-${repo.language ? repo.language.toLowerCase(): ''}`]"></i> </h5>
         
@@ -24,6 +24,8 @@
   }
 </script>
 
-<style lang="scss" scoped>
-
+<style lang="css" scoped>
+.pointer {
+  cursor: pointer;
+}
 </style>

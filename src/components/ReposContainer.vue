@@ -7,6 +7,8 @@
         <Repo :key="repo.id" v-for="repo in filteredRepos" :repo="repo" @click="fetchReadme(repo.full_name)" />
       </div>
       <div class="col-6">
+        <Spinner v-if="fetchingReadme" />
+        <Error v-if="error" :message="error" />
         <RepoReadme v-if="readme" :readmeContent="readme" />
       </div>
     </div>
@@ -14,15 +16,19 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+  import { mapState, mapGetters } from 'vuex'
   import Repo from './Repo.vue'
   import RepoReadme from './RepoReadme.vue';
+  import Spinner from "./Spinner";
+  import Error from "./Error";
 
   export default {
     name: 'ReposContainer',
     components: {
       Repo,
-      RepoReadme
+      RepoReadme,
+      Spinner,
+      Error
     },
     data() {
       return {
@@ -30,7 +36,11 @@ import { mapState, mapGetters } from 'vuex'
       }
     },
     computed: {
-      ...mapState({ langs: 'repoLanguages', readme: 'activeReadme', repos: 'repos' }),
+      ...mapState({
+        langs: 'repoLanguages', readme: 'activeReadme',
+        repos: 'repos', fetchingReadme: 'isFetchingReadme',
+        error: 'error'
+      }),
       ...mapGetters(['reposCount'])
     },
     mounted() {
